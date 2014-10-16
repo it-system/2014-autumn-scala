@@ -6,7 +6,7 @@
  * ⇛メソッド定義と実装したメソッドも扱える
  * ⇛多重継承が可能
  */
-package scala141016
+package scala141016.question
 
 //実行オブジェクト
 object Trait {

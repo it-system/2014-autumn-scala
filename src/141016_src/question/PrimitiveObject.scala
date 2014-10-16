@@ -7,15 +7,15 @@
  * すべてオブジェクト型として扱う
  */
 
-package scala141016
+package scala141016.question
 
 object PrimitiveObject {
 
   def main(args: Array[String]): Unit = {
-    var value1:Int = 1;
+    var value1:Int = 1
     value1.toString  //オブジェクトなのでメソッドを呼び出せる Int⇛String
     
-    val value2:Byte = 10;
+    val value2:Byte = 10
     value2.toChar  //Byte ⇛ Char
     
   }
