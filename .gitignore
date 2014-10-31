@@ -1,2 +1,2 @@
-src/141023_src/target/*
-src/141023_src/project/target/*
+src/**/project/
+src/**/target/
