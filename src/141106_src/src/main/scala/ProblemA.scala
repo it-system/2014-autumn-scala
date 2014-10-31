@@ -16,7 +16,7 @@ object ProblemA {
 
   /**
    * ファイルを読み込む関数
-   * @param filePath 入力例のサンプル
+   * @param filePath 入力例のサンプルファイルのパス
    * @return テキストファイルを1行ずつ格納した配列
    */
   def readTextFileIntoList(filePath: String): List[String] = {
