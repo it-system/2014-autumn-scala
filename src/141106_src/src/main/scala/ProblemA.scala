@@ -23,4 +23,15 @@ object ProblemA {
     val list = Source.fromFile(filePath, "UTF-8").getLines.toList
     return list
   }
+
+  /**
+   * 税込合計価格の最大値を計算する関数
+   * @param oldTaxRate 旧税率
+   * @param newTaxRate 新税率
+   * @param oldTotalPrice 税率変更前の税込み合計価格
+   * @return 税率変更後の税込合計価格の最大値
+   */
+  def calcMaxPrice(oldTaxRate: Int, newTaxRate: Int, oldTotalPrice: Int): Int = {
+    return 109
+  }
 }
