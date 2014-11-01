@@ -23,6 +23,13 @@ class ProblemASpec extends FunSpec {
         }
       }
 
+      describe("#enumTotalPrices") {
+        it("should return List[Int]") {
+          val response = ProblemA.enumTotalPrices(List[List[Int]](List(1, 103), List(2, 99), List(3,98)), 8)
+          assert(response.isInstanceOf[List[Int]])
+        }
+      }
+
       it("should return the max value of total price(tax included)") {
         // assert(ProblemA.calcMaxPrice(20, 80, 105) == 107)
         // assert(ProblemA.calcMaxPrice(2, 99, 105) == 108)
