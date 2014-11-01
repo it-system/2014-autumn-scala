@@ -40,6 +40,7 @@ object ProblemA {
     // 税込み合計価格がoldTotalPriceになる価格の組み合わせを全通り求める
     val priceCombinationWithoutTax = enumPriceCombinationWithoutTax(oldTotalPrice, oldTaxRate)
 
+
     // 全組み合わせに対して, 新税率での税込合計価格がいくらになるか求める
     val totalPrices = enumTotalPrices(priceCombinationWithoutTax, newTaxRate)
 
@@ -56,7 +57,7 @@ object ProblemA {
     //TOOD: 別のメソッドに切り分ける
     val combTaxIncluded = {(n: Int) => {
       var combination = List.empty[List[Int]]
-      (1 to (n-1)/2).foreach({ i =>
+      (1 to n/2).foreach({ i =>
         // 逆順になるが、Listはデータを先頭に追加した方が処理が早い
         combination = List(i, n-i) :: combination
       })
