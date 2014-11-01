@@ -9,12 +9,12 @@ import math._
 
 object ProblemA {
   def main(args: Array[String]): Unit = {
-    // val inputs = readTextFileIntoList("src/main/resources/problem.txt")
-    // for (line <- inputs) {
-    //   println(line)
-    // }
-
-    calcMaxPrice(5, 8, 105)
+    val inputs = readTextFileIntoList("src/main/resources/problem.txt")
+    for (line <- inputs) {
+      val tmp = line.split(" ")
+      val max = calcMaxPrice(tmp(0).toInt, tmp(1).toInt, tmp(2).toInt)
+      println(max)
+    }
   }
 
   /**
@@ -34,21 +34,17 @@ object ProblemA {
    * @return 税率変更後の税込合計価格の最大値
    */
   def calcMaxPrice(oldTaxRate: Int, newTaxRate: Int, oldTotalPrice: Int): Int = {
-    /**
-     * 税込み価格の決定ルール
-     *   1. 消費税率が x% のとき, 税抜価格が p 円である商品の税込価格は, p (100+x) / 100   円を小数点以下切り捨てたものである
-     *   2. 複数の商品についてまとめて支払う際の税込合計価格は, 個々の商品の税込価格の合計額とする
-     */
-
+    if (oldTotalPrice <= 0) {
+      return 0
+    }
     // 税込み合計価格がoldTotalPriceになる価格の組み合わせを全通り求める
     val priceCombinationWithoutTax = enumPriceCombinationWithoutTax(oldTotalPrice, oldTaxRate)
-    println(priceCombinationWithoutTax)
 
     // 全組み合わせに対して, 新税率での税込合計価格がいくらになるか求める
+    val totalPrices = enumTotalPrices(priceCombinationWithoutTax, newTaxRate)
 
     // 最大値を返す
-
-    return 0
+    totalPrices.max
   }
 
   /**
@@ -93,5 +89,18 @@ object ProblemA {
     }: List[List[Int]] }.apply(combTaxIncluded, oldTaxRate)
 
     combPriceWithoutTax
+  }
+
+  /**
+   * 税抜き金額の組み合わせから、各組み合わせの合計金額の配列を返す関数
+   * @param priceCombination 税抜き金額の組み合わせ
+   * @return 税込み合計金額の配列
+   */
+  def enumTotalPrices(priceCombination: List[List[Int]], taxRate: Int): List[Int] = {
+    var prices = List.empty[Int]
+    priceCombination.foreach({ p =>
+      prices = (p(0) * (100 + taxRate) / 100) + (p(1) * (100 + taxRate) / 100) :: prices
+    })
+    return prices
   }
 }
