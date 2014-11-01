@@ -49,12 +49,22 @@ object ProblemA {
 
   /**
    * 税込み合計価格が引数になるような、税抜き価格の組み合わせを求める関数
-   * @param oldTotalPrice 税率変更前の税込み合計価格
+   * @param taxIncludedTotalPrice 税込み合計価格
    * @return 税抜き価格の組み合わせの配列
    */
-  def enumPriceCombination(oldTotalPrice: Int): List[(Int, Int)] = {
-    // まず合計がoldTotalPriceになるような整数の組み合わせを列挙する
+  def enumPriceCombinationWithoutTax(taxIncludedTotalPrice: Int): List[List[Int]] = {
+    val combTaxIncluded = {(n: Int) => {
+      var combination = List.empty[List[Int]]
+      (1 to (n-1)/2).foreach({ i =>
+        // 逆順になるが、Listはデータを先頭に追加した方が処理が早い
+        combination = List(i, n-i) :: combination
+      })
+      return combination
+    }: List[List[Int]] }.apply(taxIncludedTotalPrice)
+
     // 次に、その組み合わせが実現できる税抜き価格の組み合わせを列挙する
-    return List((1, 2), (3, 4))
+    // val combTaxExcluded = {}.apply()
+    //var tmp = List.empty[Int]
+    return combTaxIncluded
   }
 }
