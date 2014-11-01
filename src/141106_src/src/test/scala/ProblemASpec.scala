@@ -14,7 +14,7 @@ class ProblemASpec extends FunSpec {
     describe("#calcMaxPrice") {
       describe("#enumPriceCombinationWithoutTax") {
         it("should return List[List[Int]]") {
-          val response = ProblemA.enumPriceCombinationWithoutTax(105)
+          val response = ProblemA.enumPriceCombinationWithoutTax(105, 5)
           assert(response.isInstanceOf[List[List[Int]]])
         }
 
