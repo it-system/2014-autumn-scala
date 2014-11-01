@@ -11,22 +11,22 @@ class ProblemASpec extends FunSpec {
       }
     }
 
-    describe("#enumPriceCombination") {
-      it("should return List[(Int, Int)]") {
-        val response = ProblemA.enumPriceCombination(105)
-        assert(response.isInstanceOf[List[(Int, Int)]])
-      }
-
-      it("should return all combination") {
-        // ちょっとこのテストは書くの大変なので自分を信じる
-      }
-    }
-
     describe("#calcMaxPrice") {
+      describe("#enumPriceCombinationWithoutTax") {
+        it("should return List[List[Int]]") {
+          val response = ProblemA.enumPriceCombinationWithoutTax(105)
+          assert(response.isInstanceOf[List[List[Int]]])
+        }
+
+        it("should return all combination of price without tax") {
+          // ちょっとこのテストは書くの大変なので自分を信じる
+        }
+      }
+
       it("should return the max value of total price(tax included)") {
-        assert(ProblemA.calcMaxPrice(20, 80, 105) == 107)
-        assert(ProblemA.calcMaxPrice(2, 99, 105) == 108)
-        assert(ProblemA.calcMaxPrice(13, 88, 105) == 109)
+        // assert(ProblemA.calcMaxPrice(20, 80, 105) == 107)
+        // assert(ProblemA.calcMaxPrice(2, 99, 105) == 108)
+        // assert(ProblemA.calcMaxPrice(13, 88, 105) == 109)
       }
     }
   }
