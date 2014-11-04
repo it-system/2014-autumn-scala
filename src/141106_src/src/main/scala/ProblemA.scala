@@ -58,9 +58,9 @@ object ProblemA {
     //TOOD: 別のメソッドに切り分ける
     val combTaxIncluded = {(n: Int) => {
       var combination = ListBuffer.empty[List[Int]]
-      (1 to n/2).foreach({ i =>
+      for (i <- (1 to n/2)) {
         combination.append(List(i, n-i))
-      })
+      }
       combination.toList
     }: List[List[Int]] }.apply(taxIncludedTotalPrice)
 
@@ -76,7 +76,7 @@ object ProblemA {
       }
 
       var combination = ListBuffer.empty[List[Int]]
-      list.foreach({ c =>
+      for (c <- list) {
         //TODO: cのlengthが2以外だった場合のエラー処理を入れる
         val item1 = calcPriceWithoutTax(c(0))
         val item2 = calcPriceWithoutTax(c(1))
@@ -84,7 +84,7 @@ object ProblemA {
         if (calcTaxIncludedPrice(item1) == c(0) && calcTaxIncludedPrice(item2) == c(1)) {
           combination.append(List(item1, item2))
         }
-      })
+      }
       // ここでreturnを書くと即時関数の中じゃなくて enumPriceCombinationWithoutTax のreturnとして解釈される(要調査)
       combination.toList
     }: List[List[Int]] }.apply(combTaxIncluded, oldTaxRate)
@@ -99,9 +99,9 @@ object ProblemA {
    */
   def enumTotalPrices(priceCombination: List[List[Int]], taxRate: Int): List[Int] = {
     var prices = List.empty[Int]
-    priceCombination.foreach({ p =>
+    for (p <- priceCombination) {
       prices = (p(0) * (100 + taxRate) / 100) + (p(1) * (100 + taxRate) / 100) :: prices
-    })
+    }
     return prices
   }
 }
