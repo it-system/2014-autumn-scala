@@ -12,8 +12,8 @@ object ProblemA {
   def main(args: Array[String]): Unit = {
     val inputs = readTextFileIntoList("src/main/resources/problem.txt")
     for (line <- inputs) {
-      val tmp = line.split(" ")
-      val max = calcMaxPrice(tmp(0).toInt, tmp(1).toInt, tmp(2).toInt)
+      val buf = line.split(" ") //e.g. ["5", "8", "105"]
+      val max = calcMaxPrice(buf(0).toInt, buf(1).toInt, buf(2).toInt)
       println(max)
     }
   }
