@@ -6,6 +6,7 @@
 
 import scala.io._
 import math._
+import scala.collection.mutable._
 
 object ProblemA {
   def main(args: Array[String]): Unit = {
@@ -56,12 +57,11 @@ object ProblemA {
   def enumPriceCombinationWithoutTax(taxIncludedTotalPrice: Int, oldTaxRate: Int): List[List[Int]] = {
     //TOOD: 別のメソッドに切り分ける
     val combTaxIncluded = {(n: Int) => {
-      var combination = List.empty[List[Int]]
+      var combination = ListBuffer.empty[List[Int]]
       (1 to n/2).foreach({ i =>
-        // 逆順になるが、Listはデータを先頭に追加した方が処理が早い
-        combination = List(i, n-i) :: combination
+        combination.append(List(i, n-i))
       })
-      combination
+      combination.toList
     }: List[List[Int]] }.apply(taxIncludedTotalPrice)
 
     //TOOD: 別のメソッドに切り分ける
@@ -75,18 +75,18 @@ object ProblemA {
         ceil(p * 100.0 / (100 + taxRate)).toInt
       }
 
-      var combination = List.empty[List[Int]]
+      var combination = ListBuffer.empty[List[Int]]
       list.foreach({ c =>
         //TODO: cのlengthが2以外だった場合のエラー処理を入れる
         val item1 = calcPriceWithoutTax(c(0))
         val item2 = calcPriceWithoutTax(c(1))
 
         if (calcTaxIncludedPrice(item1) == c(0) && calcTaxIncludedPrice(item2) == c(1)) {
-          combination = List(item1, item2) :: combination
+          combination.append(List(item1, item2))
         }
       })
       // ここでreturnを書くと即時関数の中じゃなくて enumPriceCombinationWithoutTax のreturnとして解釈される(要調査)
-      combination
+      combination.toList
     }: List[List[Int]] }.apply(combTaxIncluded, oldTaxRate)
 
     combPriceWithoutTax
