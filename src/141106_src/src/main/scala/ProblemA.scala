@@ -41,7 +41,6 @@ object ProblemA {
     // 税込み合計価格がoldTotalPriceになる価格の組み合わせを全通り求める
     val priceCombinationWithoutTax = enumPriceCombinationWithoutTax(oldTotalPrice, oldTaxRate)
 
-
     // 全組み合わせに対して, 新税率での税込合計価格がいくらになるか求める
     val totalPrices = enumTotalPrices(priceCombinationWithoutTax, newTaxRate)
 
