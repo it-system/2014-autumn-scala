@@ -71,6 +71,7 @@ object ProblemA {
       }
 
       def calcPriceWithoutTax(p: Int): Int = {
+        //TODO: 税抜き価格を計算する式で浮動小数点を使わないようにする
         ceil(p * 100.0 / (100 + taxRate)).toInt
       }
 
