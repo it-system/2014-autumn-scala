@@ -16,7 +16,8 @@ object ProblemB {
 
     for((p, i) <- problems.zipWithIndex) {
       println(s"----- problem $i -----")
-      println(p)
+      val score = solve(p)
+      println(score)
     }
 
   }
@@ -49,5 +50,13 @@ object ProblemB {
     }
 
     return problems.toList
+  }
+
+  /**
+   * @param problem 問題の初期配置（リスト）
+   * @return この配置で獲得できるスコア
+   */
+  def solve(problem: List[List[Int]]): Int = {
+    return 0
   }
 }
