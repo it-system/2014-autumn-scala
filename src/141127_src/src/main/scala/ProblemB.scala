@@ -37,7 +37,8 @@ object ProblemB {
     var problems = ListBuffer.empty[List[List[Int]]]
 
     //REVIEW これだと最後の0も読み込んでしまうので、残り行数が1になったら終わってもいい？
-    while (_inputs.length > 0) {
+    // while (_inputs.length > 0) {
+    while (_inputs.length > 1) {
       val height = _inputs.remove(0) toInt
       var problem = ListBuffer.empty[List[Int]]
       for (i <- 0 until height) {
@@ -65,10 +66,11 @@ object ProblemB {
 
     // フィールドを初期化
     var field = problem.map(_ toBuffer).toBuffer
-    println("--- 初期フィールド")
-    for (line <- field) {
-      println(line)
-    }
+    //DEBUG
+    // println("--- 初期フィールド")
+    // for (line <- field) {
+    //   println(line)
+    // }
 
     /**
      * @param min いくつ並んでたら消すか的な値（整数）
@@ -77,18 +79,19 @@ object ProblemB {
     def searchLinedStones(min: Int): List[List[Int]] = {
       var linedStones = ListBuffer.empty[ListBuffer[Int]]
 
-      for ((line, i) <- field.zipWithIndex) {
+      //HACK 各セルごとに1つ隣の石だけ見て同じ数字だったらその次も見て...違う数字が出てきたらそいつからまた同じ処理するみたいな感じに書き直せそう
+      for ((line, lineNum) <- field.zipWithIndex) {
         linedStones.append(ListBuffer.empty[Int])
 
         var continuous = 1
         var previousNum = -1
 
-        for ((n, j) <- line.zipWithIndex) {
-          if (previousNum == n) {
+        for ((n, i) <- line.zipWithIndex) {
+          if (previousNum == n && previousNum != 0) {
             continuous += 1
           } else {
             if (continuous >= min) {
-              linedStones(i) ++= Range(j-continuous, j).toList
+              linedStones(lineNum) ++= Range(i-continuous, i).toList
             }
             continuous = 1
             previousNum = n
@@ -96,7 +99,7 @@ object ProblemB {
         }
 
         if (continuous >= min) {
-          linedStones(i) ++= Range(4-(continuous-1), 5).toList
+          linedStones(lineNum) ++= Range(4-(continuous-1), 5).toList
         }
       }
       return linedStones.map(_ toList).toList
@@ -104,26 +107,109 @@ object ProblemB {
 
     // 初期配置で3つ以上並んでる部分を探して、消す部分のindexをキューに入れる
     val erasableStones = searchLinedStones(3)
-    println("--- 消せる石")
-    for ((line,i) <- erasableStones.zipWithIndex) {
-      println(s"$i 行目の $line 番目の石は消してOK")
-    }
+    //DEBUG
+    // println("--- 消せる石")
+    // for ((line,i) <- erasableStones.zipWithIndex) {
+    //   println(s"$i 行目の $line 番目の石は消してOK")
+    // }
 
     // 削除する
     for (i <- 0 until erasableStones.length) {
-      for (j <- erasableStones(i).reverse) {
+      for (j <- erasableStones(i)) {
         score += field(i)(j)
-        field(i)(j) = -1
+        field(i)(j) = 0
       }
     }
 
-    println("--- 現在のフィールド")
-    for (line <- field) {
-      println(line)
-    }
+    //DEBUG
+    // println("--- 現在のフィールド")
+    // for (line <- field) {
+    //   println(line)
+    // }
 
     // 石を落とす
+    var fell = true
+    while (fell) {
+      fell = false
+      for ((line, lineNum) <- field.zipWithIndex.reverse) {
+        for ((n, i) <- line.zipWithIndex if lineNum != field.length-1) {
+          if (field(lineNum+1)(i) == 0) {
+            if (n != 0) {
+              fell = true
+            }
+            field(lineNum+1)(i) = n
+            field(lineNum)(i) = 0
+          }
+        }
+      }
+
+      //DEBUG
+      // println("--- 落下中のフィールド")
+      // for (line <- field) {
+      //   println(line)
+      // }
+
+    }
+
+    //DEBUG
+    // println("--- 落下後のフィールド")
+    // for (line <- field) {
+    //   println(line)
+    // }
+
     // 現在の配置でまた最初の処理に戻る
+    var erase = true
+    while(erase) {
+      erase = false
+
+      val erasableStones = searchLinedStones(3)
+
+      //DEBUG
+      // println("--- 消せる石")
+      // for ((line,i) <- erasableStones.zipWithIndex) {
+      //   println(s"$i 行目の $line 番目の石は消してOK")
+      // }
+
+      for (i <- 0 until erasableStones.length) {
+        for (j <- erasableStones(i)) {
+          score += field(i)(j)
+          field(i)(j) = 0
+          erase = true
+        }
+      }
+
+      var fell = true
+      while (fell) {
+        fell = false
+        for ((line, lineNum) <- field.zipWithIndex.reverse) {
+          for ((n, i) <- line.zipWithIndex if lineNum != field.length-1) {
+            if (field(lineNum+1)(i) == 0) {
+              if (n != 0) {
+                fell = true
+              }
+              field(lineNum+1)(i) = n
+              field(lineNum)(i) = 0
+            }
+          }
+        }
+
+        //DEBUG
+        // println("--- 落下中のフィールド")
+        // for (line <- field) {
+        //   println(line)
+        // }
+
+      }
+
+      //DEBUG
+      // println("--- 落下後のフィールド")
+      // for (line <- field) {
+      //   println(line)
+      // }
+
+
+    }
+
     // 消すものがなければ終了
     return score
   }
