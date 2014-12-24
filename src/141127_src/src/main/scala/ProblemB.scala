@@ -10,7 +10,7 @@ import scala.collection.mutable._
 
 object ProblemB {
   def main(args: Array[String]): Unit = {
-    val inputs = readTextFileIntoList("problem.txt")
+    val inputs = readTextFileIntoList("src/main/resources/problem.txt")
     val problems = createProblems(inputs)
 
     for((p, i) <- problems.zipWithIndex) {
