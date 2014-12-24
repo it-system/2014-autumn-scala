@@ -10,13 +10,13 @@ import scala.collection.mutable._
 
 object ProblemB {
   def main(args: Array[String]): Unit = {
-    val inputs = readTextFileIntoList("src/main/resources/problem.txt")
+    val inputs = readTextFileIntoList("problem.txt")
     val problems = createProblems(inputs)
 
     for((p, i) <- problems.zipWithIndex) {
       println(s"----- problem $i -----")
       val score = solve(p)
-      println(s"Score: $score")
+      //println(s"Score: $score")
     }
   }
 
@@ -26,6 +26,40 @@ object ProblemB {
    */
   def readTextFileIntoList(filePath: String): List[String] = {
     Source.fromFile(filePath, "UTF-8").getLines.toList
+  }
+  
+  /**
+   * @param field 表示するフィールド
+   * @param score 表示する得点
+   */
+  def display(field: Buffer[Buffer[Int]],score:Int) ={
+    print("\033[2J") //コンソールクリア
+    print("\033[93m"); //フォントを標準色に戻す
+    print("\033[1m"); //フォントをボールド設定
+
+     for (line <- field) {
+       for(num <- line){
+         num match {
+           case 0 => print("\033[37m");print(" 　")
+           case 1 => print("\033[31m");print(" ① ")
+           case 2 => print("\033[32m");print(" ② ")
+           case 3 => print("\033[33m");print(" ③ ")
+           case 4 => print("\033[34m");print(" ④ ")
+           case 5 => print("\033[35m");print(" ⑤ ")
+           case 6 => print("\033[36m");print(" ⑥ ")
+           case 7 => print("\033[37m");print(" ⑦ ")
+           case 8 => print("\033[31m");print(" ⑧ ")
+           case 9 => print("\033[32m");print(" ⑨ ")
+         }
+       }
+       println()
+     }
+    print("\033[36m");
+    println(s"Score: $score")
+    Thread.sleep(1000)
+    print("\033[93m");
+
+     
   }
 
   /**
@@ -66,12 +100,10 @@ object ProblemB {
 
     // フィールドを初期化
     var field = problem.map(_ toBuffer).toBuffer
-    //DEBUG
-    // println("--- 初期フィールド")
-    // for (line <- field) {
-    //   println(line)
-    // }
-
+    //DISPLAY
+    //println("--- 初期フィールド")
+    display(field,score)
+    
     /**
      * @param min いくつ並んでたら消すか的な値（整数）
      * @return 消せる石の座標の配列（リスト）
@@ -107,25 +139,20 @@ object ProblemB {
 
     // 初期配置で3つ以上並んでる部分を探して、消す部分のindexをキューに入れる
     val erasableStones = searchLinedStones(3)
-    //DEBUG
-    // println("--- 消せる石")
-    // for ((line,i) <- erasableStones.zipWithIndex) {
-    //   println(s"$i 行目の $line 番目の石は消してOK")
-    // }
 
     // 削除する
+    var flg = false
     for (i <- 0 until erasableStones.length) {
       for (j <- erasableStones(i)) {
         score += field(i)(j)
         field(i)(j) = 0
+        flg = true
       }
     }
 
-    //DEBUG
-    // println("--- 現在のフィールド")
-    // for (line <- field) {
-    //   println(line)
-    // }
+    //DISPLAY
+    //println("--- 現在のフィールド")
+    if(flg) display(field,score)
 
     // 石を落とす
     var fell = true
@@ -142,33 +169,21 @@ object ProblemB {
           }
         }
       }
-
-      //DEBUG
-      // println("--- 落下中のフィールド")
-      // for (line <- field) {
-      //   println(line)
-      // }
+  
+      //DISPLAY
+      if(fell){
+       //println("--- 落下中のフィールド")
+       display(field,score)
+      }
 
     }
-
-    //DEBUG
-    // println("--- 落下後のフィールド")
-    // for (line <- field) {
-    //   println(line)
-    // }
-
+    
     // 現在の配置でまた最初の処理に戻る
     var erase = true
     while(erase) {
       erase = false
 
       val erasableStones = searchLinedStones(3)
-
-      //DEBUG
-      // println("--- 消せる石")
-      // for ((line,i) <- erasableStones.zipWithIndex) {
-      //   println(s"$i 行目の $line 番目の石は消してOK")
-      // }
 
       for (i <- 0 until erasableStones.length) {
         for (j <- erasableStones(i)) {
@@ -177,6 +192,12 @@ object ProblemB {
           erase = true
         }
       }
+      
+     //DISPLAY
+     if(erase){
+      // println("--- 現在のフィールド")
+       display(field,score)
+     }
 
       var fell = true
       while (fell) {
@@ -193,23 +214,15 @@ object ProblemB {
           }
         }
 
-        //DEBUG
-        // println("--- 落下中のフィールド")
-        // for (line <- field) {
-        //   println(line)
-        // }
+        //DISPLAY
+        if(fell){
+         //println("--- 落下中のフィールド")
+         display(field,score)
+        }
 
       }
 
-      //DEBUG
-      // println("--- 落下後のフィールド")
-      // for (line <- field) {
-      //   println(line)
-      // }
-
-
     }
-
     // 消すものがなければ終了
     return score
   }
