@@ -12,7 +12,7 @@ object Sample {
   def main(args: Array[String]): Unit = {
     while(true) {
       var H = input.nextInt
-      println(H)
+      debug(H)
 
       if (H == 0) return
 
@@ -23,5 +23,9 @@ object Sample {
         println()
       }
     }
+  }
+
+  def debug(args: Any): Unit = {
+    println(args)
   }
 }
