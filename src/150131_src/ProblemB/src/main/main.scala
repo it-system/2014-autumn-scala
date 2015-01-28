@@ -3,11 +3,17 @@
  */
 
 import scala.io._
-import math._
-import scala.collection.mutable._
 
 object Sample {
+
+  val sc = new java.util.Scanner(System.in)
+
   def main(args: Array[String]): Unit = {
-    println("Hello, Scala World!!")
-  }
+
+    val a,b,c = sc.next
+    println(a)
+    println(b)
+    println(c)
+
+ }
 }
