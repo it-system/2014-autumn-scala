@@ -31,8 +31,43 @@ object Sample {
     }
   }
 
-  def solve(field: Buffer[Buffer[Int]]): Int = {
-    return 0
+  def solve(f: List[List[Int]]): Int = {
+    var ans = 0
+
+    // 3個以上の水平に並んだ石の消滅処理
+    val replacedField  = f.map({ line =>
+      var continuous: Int = 1
+      var previousNum: Int = 0
+      var replacedLine: Buffer[Int] = line.toBuffer
+
+      for ((n, i) <- line.zipWithIndex) {
+        if (previousNum == n) {
+          continuous += 1
+        } else if (continuous >= 3) {
+          for (j <- (i-continuous until i)) {
+            ans += line(j)
+            replacedLine(j) = -1
+          }
+          continuous = 1
+        } else {
+          continuous = 1
+        }
+        previousNum = n
+      }
+
+      if (continuous >= 3) {
+        for (j <- (W-continuous until W)) {
+          ans += line(j)
+          replacedLine(j) = -1
+        }
+      }
+
+      replacedLine
+    })
+
+    // 石の落下処理
+
+    return ans
   }
 
   def debug(args: Any): Unit = {
