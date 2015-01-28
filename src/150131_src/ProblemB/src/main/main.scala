@@ -12,7 +12,7 @@ object Sample {
 
   def main(args: Array[String]): Unit = {
     while(true) {
-      var H = input.nextInt
+      var H: Int = input.nextInt
       debug(H)
 
       if (H == 0) return
@@ -23,7 +23,7 @@ object Sample {
       //   field(y) = input.nextLine.split(" ").map(_.toInt).toBuffer
       // }
 
-      var field = List.fill(H,W)(input.nextInt).map(_.toBuffer).toBuffer
+      val field: Buffer[Buffer[Int]] = List.fill(H,W)(input.nextInt).map(_.toBuffer).toBuffer
       field.foreach(debug)
     }
   }
