@@ -25,7 +25,14 @@ object Sample {
 
       val field: Buffer[Buffer[Int]] = List.fill(H,W)(input.nextInt).map(_.toBuffer).toBuffer
       field.foreach(debug)
+
+      val ans: Int = solve(field)
+      println(ans)
     }
+  }
+
+  def solve(field: Buffer[Buffer[Int]]): Int = {
+    return 0
   }
 
   def debug(args: Any): Unit = {
