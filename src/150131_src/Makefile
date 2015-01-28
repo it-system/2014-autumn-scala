@@ -1,8 +1,5 @@
-all: run
+b:
+	cat ProblemB/src/resources/problem.txt | scala ProblemB/src/main/main.scala
 
-run:
-	sbt compile
-	sbt run
-
-test:
-	sbt test
+g:
+	cat ProblemG/src/resources/problem.txt | scala ProblemG/src/main/main.scala
