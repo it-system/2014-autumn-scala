@@ -3,6 +3,7 @@
  */
 
 import scala.io._
+import scala.collection.mutable._
 
 object Sample {
 
@@ -16,12 +17,14 @@ object Sample {
 
       if (H == 0) return
 
-      for ( y <- 0 until H) {
-        for (x <- 0 until W) {
-          print(input.nextInt)
-        }
-        println()
-      }
+      // H * Wの可変な多次元配列
+      // var field = Array.ofDim[Int](H, W).map(_.toBuffer).toBuffer
+      // for ( y <- 0 until H) {
+      //   field(y) = input.nextLine.split(" ").map(_.toInt).toBuffer
+      // }
+
+      var field = List.fill(H,W)(input.nextInt).map(_.toBuffer).toBuffer
+      field.foreach(debug)
     }
   }
 
