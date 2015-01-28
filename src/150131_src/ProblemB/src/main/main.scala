@@ -62,7 +62,7 @@ object Sample {
         }
       }
 
-      replacedLine
+      replacedLine.toList
     })
 
     // 石の落下処理
