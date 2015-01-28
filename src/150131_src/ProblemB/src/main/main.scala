@@ -23,7 +23,7 @@ object Sample {
       //   field(y) = input.nextLine.split(" ").map(_.toInt).toBuffer
       // }
 
-      val field: Buffer[Buffer[Int]] = List.fill(H,W)(input.nextInt).map(_.toBuffer).toBuffer
+      val field: List[List[Int]] = List.fill(H,W)(input.nextInt)
       field.foreach(debug)
 
       val ans: Int = solve(field)
