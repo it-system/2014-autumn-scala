@@ -28,7 +28,7 @@ object Sample {
     // 各行に対して石を消す処理
     // この中で合計得点を加算...他に良い書き方あるかな
     val fieldAfterErasingStones = f.map({ line =>
-      val (tmpScore, newLine)= eraseLinedStones(line)
+      val (tmpScore, newLine) = eraseLinedStones(line)
       ans += tmpScore
       newLine
     })
@@ -39,9 +39,8 @@ object Sample {
     val fell = !fieldAfterErasingStones.sameElements(fieldAfterfallingStones)
     if (fell) {
       return ans + solve(fieldAfterfallingStones)
-    } else {
-      return ans
     }
+    return ans
 
     // 3個以上の水平に並んだ石の消滅処理
     // val replacedField  = f.map({ line =>
