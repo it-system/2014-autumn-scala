@@ -38,12 +38,12 @@ object ProblemB {
     display(fieldAfterErasingStones)
 
     // 左に90度回転 → 各行ごと（つまり元の配列の各列ごと）に石の落下処理 → 右に90度回転
-    val fieldAfterfallingStones = fieldAfterErasingStones.map(_.reverse).transpose.map(fallStones).transpose.map(_.reverse)
-    display(fieldAfterfallingStones)
+    val fieldAfterFallingStones = fieldAfterErasingStones.map(_.reverse).transpose.map(fallStones).transpose.map(_.reverse)
+    display(fieldAfterFallingStones)
 
-    val fell = !fieldAfterErasingStones.sameElements(fieldAfterfallingStones)
+    val fell = !fieldAfterErasingStones.sameElements(fieldAfterFallingStones)
     if (fell) {
-      return ans + solve(fieldAfterfallingStones)
+      return ans + solve(fieldAfterFallingStones)
     }
     return ans
   }
