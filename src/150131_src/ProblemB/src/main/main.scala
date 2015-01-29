@@ -15,14 +15,7 @@ object Sample {
       val H: Int = input.nextInt
       if (H == 0) return
 
-      // H * Wの可変な多次元配列
-      // var field = Array.ofDim[Int](H, W).map(_.toBuffer).toBuffer
-      // for ( y <- 0 until H) {
-      //   field(y) = input.nextLine.split(" ").map(_.toInt).toBuffer
-      // }
-
       val field: List[List[Int]] = List.fill(H,W)(input.nextInt)
-      field.foreach(debug)
 
       val ans: Int = solve(field)
       println(ans)
