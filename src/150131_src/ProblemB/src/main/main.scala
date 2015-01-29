@@ -18,6 +18,7 @@ object Sample {
       if (H == 0) return
 
       val field: List[List[Int]] = List.fill(H,W)(input.nextInt)
+      display(field)
 
       val ans: Int = solve(field)
       println(ans)
@@ -34,9 +35,11 @@ object Sample {
       ans += tmpScore
       newLine
     })
+    display(fieldAfterErasingStones)
 
     // 左に90度回転 → 各行ごと（つまり元の配列の各列ごと）に石の落下処理 → 右に90度回転
     val fieldAfterfallingStones = fieldAfterErasingStones.map(_.reverse).transpose.map(fallStones).transpose.map(_.reverse)
+    display(fieldAfterfallingStones)
 
     val fell = !fieldAfterErasingStones.sameElements(fieldAfterfallingStones)
     if (fell) {
@@ -89,5 +92,39 @@ object Sample {
       }
     }
     return l.toList
+  }
+
+  /**
+   * @param field 表示するフィールド
+   * @param score 表示する得点
+   */
+  def display(field: List[List[Int]]) ={
+    print("\033[2J") //コンソールクリア
+    println("\033[2J") //コンソールクリア
+    print("\033[93m"); //フォントを標準色に戻す
+    print("\033[1m"); //フォントをボールド設定
+
+     for (line <- field) {
+       for(num <- line){
+         num match {
+           case -1 => print("\033[37m");print(" 　")
+           case 1 => print("\033[31m");print(" ① ")
+           case 2 => print("\033[32m");print(" ② ")
+           case 3 => print("\033[33m");print(" ③ ")
+           case 4 => print("\033[34m");print(" ④ ")
+           case 5 => print("\033[35m");print(" ⑤ ")
+           case 6 => print("\033[36m");print(" ⑥ ")
+           case 7 => print("\033[37m");print(" ⑦ ")
+           case 8 => print("\033[31m");print(" ⑧ ")
+           case 9 => print("\033[32m");print(" ⑨ ")
+         }
+       }
+       println()
+     }
+    // print("\033[36m");
+    // println(s"Score: $score")
+    println("================")
+    Thread.sleep(1000)
+    print("\033[93m");
   }
 }
