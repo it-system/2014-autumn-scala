@@ -50,7 +50,7 @@ object Sample {
     // TODO: breakを使わずに書き直したい
     b.breakable {
       for (i <- 1 until W) {
-        if (line(stack(0)) == line(i)) {
+        if (line(i) != -1 && line(stack(0)) == line(i)) {
           stack.append(i)
         } else if (stack.size >= 3) {
           b.break
