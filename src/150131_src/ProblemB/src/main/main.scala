@@ -90,8 +90,4 @@ object Sample {
     }
     return l.toList
   }
-
-  def debug(args: Any): Unit = {
-    println(args)
-  }
 }
