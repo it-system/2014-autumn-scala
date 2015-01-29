@@ -4,9 +4,11 @@
 
 import scala.io._
 import scala.collection.mutable._
+import scala.util.control.Breaks
 
 object Sample {
 
+  val b = new Breaks
   val input = new java.util.Scanner(System.in)
   val W = 5
 
@@ -44,8 +46,31 @@ object Sample {
   }
 
   def eraseLinedStones(line: List[Int]): (Int, List[Int]) = {
-    var score = 0
-    return (score, line)
+    var stack = ListBuffer(0)
+    // TODO: breakを使わずに書き直したい
+    b.breakable {
+      for (i <- 1 until W) {
+        if (line(stack(0)) == line(i)) {
+          stack.append(i)
+        } else if (stack.size >= 3) {
+          b.break
+        } else {
+          stack.clear
+          stack.append(i)
+        }
+      }
+    }
+
+    if (stack.size >= 3) {
+      var l = line.toBuffer
+      var tmpScore = 0
+      stack.foreach({ i =>
+        l(i) = -1
+        tmpScore += line(i)
+      })
+      return (tmpScore, l.toList)
+    }
+    return (0, line)
   }
 
   def fallStones(line: List[Int]): List[Int] = {
