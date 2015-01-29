@@ -6,7 +6,7 @@ import scala.io._
 import scala.collection.mutable._
 import scala.util.control.Breaks
 
-object Sample {
+object ProblemB {
 
   val b = new Breaks
   val input = new java.util.Scanner(System.in)
