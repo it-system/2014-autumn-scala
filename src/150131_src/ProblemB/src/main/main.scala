@@ -12,9 +12,7 @@ object Sample {
 
   def main(args: Array[String]): Unit = {
     while(true) {
-      var H: Int = input.nextInt
-      debug(H)
-
+      val H: Int = input.nextInt
       if (H == 0) return
 
       // H * Wの可変な多次元配列
