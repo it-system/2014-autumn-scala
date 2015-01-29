@@ -26,37 +26,54 @@ object Sample {
     var ans = 0
 
     // 3個以上の水平に並んだ石の消滅処理
-    val replacedField  = f.map({ line =>
-      var continuous: Int = 1
-      var previousNum: Int = 0
-      var replacedLine: Buffer[Int] = line.toBuffer
-
-      for ((n, i) <- line.zipWithIndex) {
-        if (previousNum == n) {
-          continuous += 1
-        } else if (continuous >= 3) {
-          for (j <- (i-continuous until i)) {
-            ans += line(j)
-            replacedLine(j) = -1
-          }
-          continuous = 1
-        } else {
-          continuous = 1
-        }
-        previousNum = n
-      }
-
-      if (continuous >= 3) {
-        for (j <- (W-continuous until W)) {
-          ans += line(j)
-          replacedLine(j) = -1
-        }
-      }
-
-      replacedLine.toList
-    })
-
+    // val replacedField  = f.map({ line =>
+    //   var continuous: Int = 1
+    //   var previousNum: Int = 0
+    //   var replacedLine: Buffer[Int] = line.toBuffer
+    //
+    //   for ((n, i) <- line.zipWithIndex) {
+    //     if (previousNum == n) {
+    //       continuous += 1
+    //     } else if (continuous >= 3) {
+    //       for (j <- (i-continuous until i)) {
+    //         ans += line(j)
+    //         replacedLine(j) = -1
+    //       }
+    //       continuous = 1
+    //     } else {
+    //       continuous = 1
+    //     }
+    //     previousNum = n
+    //   }
+    //
+    //   if (continuous >= 3) {
+    //     for (j <- (W-continuous until W)) {
+    //       ans += line(j)
+    //       replacedLine(j) = -1
+    //     }
+    //   }
+    //
+    //   replacedLine.toList
+    // })
+    //
     // 石の落下処理
+    // 左に90度回転
+    // val rotatedField = replacedField.map(_.reverse).transpose
+    // var fellField = rotatedField.map({ line =>
+    //   var replacedLine = line.toBuffer
+    //   var fell = false
+    //   do {
+    //     fell = false
+    //     for (i <- 0 until W-1 if replacedLine(i) != -1) {
+    //       if (replacedLine(i+1) == -1) {
+    //         replacedLine(i+1) = replacedLine(i)
+    //         replacedLine(i) = -1
+    //         fell = true
+    //       }
+    //     }
+    //   } while (fell)
+    //   replacedLine
+    // }).transpose.map(_.reverse)
 
     return ans
   }
