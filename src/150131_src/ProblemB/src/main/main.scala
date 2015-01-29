@@ -73,8 +73,22 @@ object Sample {
     return (0, line)
   }
 
+  // TODO: whileを使わずに書き直したい
   def fallStones(line: List[Int]): List[Int] = {
-    return line
+    var fell = true
+    var l = line.toBuffer
+
+    while (fell) {
+      fell = false
+      for (i <- 0 until l.size-1 if l(i) != -1) {
+        if (l(i+1) == -1) {
+          l(i+1) = l(i)
+          l(i) = -1
+          fell = true
+        }
+      }
+    }
+    return l.toList
   }
 
   def debug(args: Any): Unit = {
