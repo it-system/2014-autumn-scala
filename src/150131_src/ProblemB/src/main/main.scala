@@ -13,16 +13,17 @@ object ProblemB {
   val W = 5
 
   def main(args: Array[String]): Unit = {
-    while(true) {
-      val H: Int = input.nextInt
-      if (H == 0) return
+    solveRecursive()
+  }
 
-      val field: List[List[Int]] = List.fill(H,W)(input.nextInt)
-      // display(field)
+  def solveRecursive(): Unit = {
+    val H: Int = input.nextInt
+    if (H == 0) return
 
-      val ans: Int = solve(field)
-      println(ans)
-    }
+    val field = List.fill(H,W)(input.nextInt)
+    val ans: Int = solve(field)
+    println(ans)
+    solveRecursive()
   }
 
   def solve(f: List[List[Int]]): Int = {
