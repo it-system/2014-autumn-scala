@@ -18,7 +18,7 @@ object ProblemB {
       if (H == 0) return
 
       val field: List[List[Int]] = List.fill(H,W)(input.nextInt)
-      display(field)
+      // display(field)
 
       val ans: Int = solve(field)
       println(ans)
@@ -35,11 +35,11 @@ object ProblemB {
       ans += tmpScore
       newLine
     })
-    display(fieldAfterErasingStones)
+    // display(fieldAfterErasingStones)
 
     // 左に90度回転 → 各行ごと（つまり元の配列の各列ごと）に石の落下処理 → 右に90度回転
     val fieldAfterFallingStones = fieldAfterErasingStones.map(_.reverse).transpose.map(fallStones).transpose.map(_.reverse)
-    display(fieldAfterFallingStones)
+    // display(fieldAfterFallingStones)
 
     val fell = !fieldAfterErasingStones.sameElements(fieldAfterFallingStones)
     if (fell) {
