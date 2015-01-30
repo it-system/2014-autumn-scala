@@ -7,92 +7,55 @@ import scala.collection.mutable.ListBuffer
 object ProblemG {
 
   //とりあえず定数で
-  val CIRCLE_INSIDE_INSIDE = 1
-  val CIRCLE_INSIDE_OUTSIDE = 2
-  val CIRCLE_OUTSIDE_OUTSIDE = 3
+  val POINT_INSIDE = 1 //PとQの両方が円の内側にある場合
+  val POINT_OTHER = 2 //PとQどちらかが円の外側の場合
+  val POINT_OUTSIDE = 3 //PとQの両方が円の外側の場合
   
   def main(args: Array[String]): Unit = {
 	//ファイル読み込み
     var datasetList:ListBuffer[Dataset] = readTextFileIntoList("ProblemG.txt")
-	var num:Int = 1
 	//データセット分、繰り返す
 	for(dataset <- datasetList){
 	  //PとQのペア分、繰り返す
-	  println("---------------------------No:"+num+"---------------------------")
-	  println("円の数:"+dataset.circleList.length)
 	  for(pair <- dataset.pairList){
 	     var p = pair._1
 	     var q = pair._2
-	     println("P:"+p.printPoint+" Q:"+q.printPoint +"  ") //PとQの座標
 	     
 	     //PとQがどの円弧とも接触せず結ばれるか判定し、YES or NOを出力する
 	     //PとQが両方内側の場合
-	   	 if(intersect(dataset.circleList, pair) == CIRCLE_INSIDE_INSIDE) {
+	   	 if(intersect(dataset.circleList, pair) == POINT_INSIDE) {
 	   		 print("YES ") 
-	   	 }
-	     //PとQのどちらかが円の外側の場合
-	   	 else if(intersect(dataset.circleList, pair) == CIRCLE_INSIDE_OUTSIDE){ 
+	   	 } else if(intersect(dataset.circleList, pair) == POINT_OTHER) {  //PとQのどちらかが円の外側の場合 
 	   		 print("NO ")
-	   	 }
-	   	 //PとQどちらも円の外側の場合
-	   	 else{
+	   	 } else { //PとQどちらも円の外側の場合
 	   	   var polygonList = createPolygon(dataset.circleList ) //多角形を作る
-	   	   var pLine = new Line(p,new Point(10000,p.y+2),0,0) //PとXの最大で線分を作る
-	   	   var qLine = new Line(q,new Point(10000,q.y+2),0,0) //QとXの最大で線分を作る
+	   	   var pLine = new Line(p,new Point(10000,p.y/2),0,0) //PとXの最大で線分を作る
+	   	   var qLine = new Line(q,new Point(10000,q.y/2),0,0) //QとXの最大で線分を作る
+	   	   
 	   	   //多角形ができない場合は、結ばれるのでYES
 	   	   if(polygonList == null){
-	   	     print("YES ")
+	   		   print("YES ")
 	   	   }else{
 	   	     var pResult = new Array[Boolean](polygonList.length)
 	   	     var qResult = new Array[Boolean](polygonList.length)
-	   	     var mm = 0;
 	   	     
-	   	     for(polygon <- polygonList){
+	   	     for(i<- 0  until polygonList.length){
 	   	       var pCount = 0 //Pと多角形の交差回数
 	   	       var qCount = 0 //Qと多角形の交差回数
-	   	       for(line <- polygon.lineList ){
-	   	         if(pLine.intersect2(line)){ 
-	   	          // print("P:"+pLine.point1.printPoint+" "+pLine.point2.printPoint+" 線分:"+line.point1 .printPoint+" "+line.point2 .printPoint+" ◯ ")
-	   	          // print("P:◯ ")
-	   	           pCount = pCount + 1
-	   	         }else{
-	   	           //print("P:"+pLine.point1.printPoint+" "+pLine.point2.printPoint+" 線分:"+line.point1 .printPoint+" "+line.point2 .printPoint+" ☓ ")
-	   	           //print("P:☓ ")
-	   	         }
-	   	         if(qLine.intersect2(line)){
-	   	           //print("Q:"+pLine.point1.printPoint+" "+pLine.point2.printPoint+" 線分:"+line.point1 .printPoint+" "+line.point2 .printPoint+" ◯ ")
-	   	           //print("Q:◯ ")
-	   	           qCount = qCount + 1
-	   	         }else{
-	   	           //print("Q:"+pLine.point1.printPoint+" "+pLine.point2.printPoint+" 線分:"+line.point1 .printPoint+" "+line.point2 .printPoint+" ☓ ")
-	   	           //print("Q:☓ ")
-	   	         }
-	   	         
+	   	       for(line <- polygonList(i).lineList ){
+	   	         if(pLine.intersect(line)) pCount = pCount + 1
+	   	         if(qLine.intersect(line)) qCount = qCount + 1
 	   	       }
-	   	       //println
 	   	       //交差回数が奇数の場合は内側、偶数の場合は外側
-	   	       if(pCount % 2 != 0){
-	   	         pResult(mm) = true 
-	   	       }
-	   	       if(qCount % 2 != 0){
-	   	         qResult(mm) = true 
-	   	       }
-	   	       mm = mm +1
+	   	       if(pCount % 2 != 0) pResult(i) = true 
+	   	       if(qCount % 2 != 0) qResult(i) = true 
 	   	     }
-	   	     
-	   	     if(checkOrder(pResult, qResult)){
-	   	       print("YES ")
-	   	     }else{
-	   	       print("NO ")
-	   	     }
-	   	     
+	   	     //PとQが同じ多角形にいたら、YES、そうでなければ NO
+	   	     if(checkOrder(pResult, qResult)) print("YES ") else print("NO ")
 	   	   }
-	   	   
 	   	 }
-	   	 println()
 	  }
 	  println()
-	  num = num + 1
 	}
   }
   
@@ -158,24 +121,19 @@ object ProblemG {
     
     //円それぞれに、PとQが存在するかチェックする
      for(i<-0 until circleList.length){ 
-        if(circleList(i).containPoint(pair._1)){
-          pArray(i) = true
-        }
-        if(circleList(i).containPoint(pair._2)){
-          qArray(i) = true
-        }
+        if(circleList(i).containPoint(pair._1)) pArray(i) = true
+        if(circleList(i).containPoint(pair._2)) qArray(i) = true
      }	
 
      //PとQが円の外側にある場合
      if(checkInside(pArray)==false && checkInside(qArray)==false) {
-       result = CIRCLE_OUTSIDE_OUTSIDE 
+       result = POINT_OUTSIDE 
      }//PとQどちらも円の内側の場合
-     else if(checkInside(pArray)==true && checkInside(qArray)==true
-             && checkOrder(pArray,qArray)){
-       result =  CIRCLE_INSIDE_INSIDE 
+     else if(checkInside(pArray)==true && checkInside(qArray)==true && checkOrder(pArray,qArray)){
+       result =  POINT_INSIDE 
      }//PとQどちらかが円の外側にある場合
      else{
-       result = CIRCLE_INSIDE_OUTSIDE 
+       result = POINT_OTHER 
      }
      
      //PとQの結果が内側にあるか
@@ -187,10 +145,8 @@ object ProblemG {
        }
        false
      }
-     
      return result
   }
-  
 	   //PとQの配列の並びが同じか
 	 def checkOrder(array1:Array[Boolean],array2:Array[Boolean]):Boolean={
 	   for(i<-0 until array1.length){
@@ -207,10 +163,10 @@ object ProblemG {
    * @param 円2
    */
   def intersect(circle1:Circle,circle2:Circle):Boolean={
-    var p = (Math.pow((circle2.centerPoint.x - circle1.centerPoint.x ),2).toInt + Math.pow((circle2.centerPoint.y - circle1.centerPoint.y ),2).toInt)
+    var p = (Math.pow((circle2.centerPoint.x - circle1.centerPoint.x ),2).toInt
+              + Math.pow((circle2.centerPoint.y - circle1.centerPoint.y ),2).toInt)
     var n = Math.pow((circle2.r  + circle1.r ), 2).toInt
     if(p <= n)  true else false
-    
   }
   
   /**
@@ -222,7 +178,6 @@ object ProblemG {
     
     //円が２つ以下だと、多角形ができないのでnullでリターン
     if(circleList.length <= 2){
-       println("多角形はできない")
        return null
     }
     
@@ -230,9 +185,7 @@ object ProblemG {
      for(i<-0 until circleList.length ){
         for(j<-0 until circleList.length){
            if(i!=j && intersect(circleList(i),circleList(j))){
-              //print((i+1)+"と"+(j+1)+" ")
               lineList.+=(new Line(circleList(i).centerPoint ,circleList(j).centerPoint ,i+1 ,j+1) )
-              //println()
            }
         }
      }
@@ -257,13 +210,8 @@ object ProblemG {
     	   else if(line.circleNum2 == line2.circleNum1 && line.circleNum1 != line2.circleNum2 &&checkNum(line2)){
 	            polygon.lineList.+=(line2)
 	            if(polygon.lineList(0).circleNum1 == polygon.lineList(polygon.lineList.length-1).circleNum2 && checkPolygonOrder(polygon) ){
-	            	for(poly <- polygon.lineList ){
-	                 // print("円"+poly.circleNum1  +":"+poly.point1.printPoint+" 円"+poly.circleNum2+":"+poly.point2.printPoint+" ")
-	                 }
-	            	//println()
 	            	polygonList.+=(polygon) //多角形リストに格納
 	            } 
-	            
 	            polygon = new Polygon() 
 	            polygon.lineList = templineList
     	   }
@@ -293,99 +241,59 @@ object ProblemG {
   }
   
   
-  class Dataset{ //データセットオブジェクト
+  class Dataset{
     var circleList:ListBuffer[Circle] = ListBuffer.empty[Circle]
     var pairList:ListBuffer[(Point,Point)] = ListBuffer.empty[(Point,Point)]
   }
   
+  /**
+   * 円を表現するクラス
+   */
   class Circle(var centerPoint:Point,var r:Int ){ //円オブジェクト
     def containPoint(point:Point):Boolean = {
       //(x - a)^2 + (y - b)^2 < r^2
       var pointR:Double = Math.pow((point.x - centerPoint.x),2) + Math.pow((point.y - centerPoint.y),2)
-      
-      //println (pointR +"<="+Math.pow(r,2))
       //円の内側(境界線含む)領域に含まれているか
       if(pointR <= Math.pow(r,2)) true else false
     }
     
   }
   
-  class Point(var x:Int,var y:Int ) //点オブジェクト
-  {
-    def printPoint():String={
-      return ("("+this.x +","+this.y +")")
-    }
-  }
+  /**
+   * 点を表現するクラス
+   */
+  class Point(var x:Int,var y:Int )
   
   /**
    * 線分を表現するクラス
    */
   class Line(var point1:Point,var point2:Point,var circleNum1:Int, var circleNum2:Int){
-	  /**
-	   * 線分と線分の交差判定
-	   * @param 線分
-	   */
+	  
+      //線分交差判定
 	  def intersect(line:Line):Boolean ={
 	    var point3 = line.point1
 	    var point4 = line.point2
 	    
-	    //X座標のチェック
-	    if(point1.x >= point2.x){
-	    	if((point1.x < point3.x && point1.x < point4.x) || (point2.x > point3.x && point2.x > point4.x)){
-	    	  return false
-	    	}
-	    }else{
-	       if((point2.x < point3.x && point2.x < point4.x) || (point1.x > point3.x && point1.x > point4.x)){
-	    	  return false
-	    	}
-	    }
-	    //Y座標のチェック
-	    if(point1.y >= point2.y){
-	    	if((point1.y <  point3.y && point1.y < point4.y) || (point2.y > point3.y && point2.y > point4.y)){
-	    	  return false
-	    	}
-	    }else{
-	       if((point2.y < point3.y && point2.y < point4.y) || (point1.y > point3.y && point1.y > point4.y)){
-	    	  return false
-	    	}
-	    }
-	    //方程式によるチェック
-	    if(((point1.x.toDouble - point2.x.toDouble)*(point3.y.toDouble - point1.y.toDouble )+(point1.y.toDouble - point2.y.toDouble)*(point1.x.toDouble - point3.x.toDouble )) *
-	        ((point1.x.toDouble - point2.x.toDouble)*(point4.y.toDouble - point1.y.toDouble )+(point1.y.toDouble - point2.y.toDouble)*(point1.x.toDouble - point4.x.toDouble ))>0){
-	       return false
-	    }
-	    if(((point3.x.toDouble - point4.x.toDouble)*(point1.y.toDouble - point3.y.toDouble )+(point3.y.toDouble - point4.y.toDouble)*(point3.x.toDouble - point1.x.toDouble )) *
-	        ((point3.x.toDouble - point4.x.toDouble)*(point2.y.toDouble - point3.y.toDouble )+(point3.y.toDouble - point4.y.toDouble)*(point3.x.toDouble - point2.x.toDouble ))>0){
-	       return false
-	    }
-	    true
-	  }
-	  	  /**
-	   * 線分と線分の交差判定
-	   * @param 線分
-	   */
-	  def intersect2(line:Line):Boolean ={
-	    var point3 = line.point1
-	    var point4 = line.point2
-	    
-	    //If (((p1.x - p2.x) * (p3.y - p1.y) + (p1.y - p2.y) * (p1.x - p3.x)) * _
-	    if(((point1.x.toDouble - point2.x.toDouble) * (point3.y.toDouble-point1.y.toDouble) + (point1.y.toDouble-point2.y.toDouble)*(point1.x.toDouble - point3.x.toDouble)) *
-	        // ((p1.x - p2.x) * (p4.y - p1.y) + (p1.y - p2.y) * (p1.x - p4.x)) < 0#) Then
-	        ((point1.x.toDouble - point2.x.toDouble) * ( point4.y.toDouble- point1.y.toDouble)+(point1.y.toDouble -point2.y.toDouble)*(point1.x.toDouble - point4.x.toDouble)) < 0){
-	      //  If (((p3.x - p4.x) * (p1.y - p3.y) + (p3.y - p4.y) * (p3.x - p1.x)) * _
-	      if(((point3.x.toDouble - point4.x.toDouble) * (point1.y.toDouble - point3.y.toDouble) + (point3.y.toDouble - point4.y.toDouble) * (point3.x.toDouble - point1.x.toDouble)) *
-	          // ((p3.x - p4.x) * (p2.y - p3.y) + (p3.y - p4.y) * (p3.x - p2.x)) < 0#) Then
-	          ((point3.x.toDouble - point4.x.toDouble) * (point2.y.toDouble - point3.y.toDouble) + (point3.y.toDouble - point4.y.toDouble) * (point3.x.toDouble - point2.x.toDouble)) <0){
+	    if(((point1.x.toDouble - point2.x.toDouble) * (point3.y.toDouble-point1.y.toDouble) + 
+	        (point1.y.toDouble-point2.y.toDouble)*(point1.x.toDouble - point3.x.toDouble)) *
+	        ((point1.x.toDouble - point2.x.toDouble) * ( point4.y.toDouble- point1.y.toDouble) + 
+	            (point1.y.toDouble -point2.y.toDouble)*(point1.x.toDouble - point4.x.toDouble)) < 0){
+	      if(((point3.x.toDouble - point4.x.toDouble) * (point1.y.toDouble - point3.y.toDouble) + 
+	          (point3.y.toDouble - point4.y.toDouble) * (point3.x.toDouble - point1.x.toDouble)) *
+	          ((point3.x.toDouble - point4.x.toDouble) * (point2.y.toDouble - point3.y.toDouble) + 
+	              (point3.y.toDouble - point4.y.toDouble) * (point3.x.toDouble - point2.x.toDouble)) <0){
 	         return true
 	      }
 	    }
-	    
 	    false
 	  }
   } 
+  /**
+   * 多角形を表現するクラス
+   */
   class Polygon(){
     var lineList:ListBuffer[Line] = ListBuffer.empty[Line]
-  } //多角形オブジェクト
+  } 
   
 }
 
